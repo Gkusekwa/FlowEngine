@@ -44,6 +44,46 @@ FlowEngine follows a microservices-inspired architecture with clear separation o
                                     └─────────────┘
 ```
 
+<details>
+<summary>📊 View as Mermaid Diagram (click to expand)</summary>
+
+```mermaid
+flowchart TB
+    subgraph Frontend["Frontend (React)"]
+        BPMN["BPMN Editor<br/>(bpmn-js)"]
+        Dashboard["Dashboard<br/>(Instances)"]
+        SLAMon["SLA Monitor<br/>(Metrics)"]
+    end
+
+    subgraph Gateway["API Gateway (NestJS)"]
+        Auth["Auth (JWT)"]
+        RateLimit["Rate Limiting"]
+        Router["Request Router"]
+    end
+
+    subgraph Services["Core Services"]
+        WorkflowDef["Workflow<br/>Definition<br/>Service"]
+        Execution["Execution<br/>Engine<br/>Service"]
+        SLA["SLA<br/>Monitoring<br/>Service"]
+    end
+
+    subgraph Data["Data Layer"]
+        Postgres[(PostgreSQL<br/>Primary)]
+        Redis[(Redis<br/>Queues)]
+    end
+
+    subgraph Workers["Background Processing"]
+        BullMQ["BullMQ Workers"]
+    end
+
+    Frontend -->|REST API / WebSocket| Gateway
+    Gateway --> Services
+    Services --> Data
+    Redis --> BullMQ
+```
+
+</details>
+
 ## Core Components
 
 ### 1. API Gateway
@@ -196,6 +236,39 @@ interface ExecutionResult {
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<details>
+<summary>📊 View as Mermaid Diagram (click to expand)</summary>
+
+```mermaid
+flowchart TB
+    Start([Start Event]) --> Token1[Token 1]
+    Token1 --> UserTask[User Task]
+    UserTask --> Gateway{Parallel Gateway}
+    
+    Gateway --> Token2[Token 2]
+    Gateway --> Token3[Token 3]
+    Gateway --> Token4[Token 4]
+    
+    Token2 --> ServiceTask[Service Task]
+    Token3 --> ScriptTask[Script Task]
+    Token4 --> ReceiveTask[Receive Task]
+    
+    ServiceTask --> JoinGateway{Join Gateway}
+    ScriptTask --> JoinGateway
+    ReceiveTask --> JoinGateway
+    
+    JoinGateway --> EndEvent([End Event])
+
+    subgraph TokenStates["Token States"]
+        Active["🟢 ACTIVE - Currently executing"]
+        Waiting["🟡 WAITING - Waiting for external event"]
+        Completed["✅ COMPLETED - Finished execution"]
+        Merged["🔀 MERGED - Merged at join gateway"]
+    end
+```
+
+</details>
+
 ### 4. SLA Monitoring Service
 
 Real-time SLA tracking and enforcement:
@@ -235,6 +308,33 @@ AI-powered workflow design and assistance:
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+<details>
+<summary>📊 View as Mermaid Diagram (click to expand)</summary>
+
+```mermaid
+flowchart TB
+    subgraph AIService["AI Service (Facade)"]
+        Registry["providers: Map&lt;ProviderType, LLMProvider&gt;"]
+    end
+
+    Registry --> OpenAI["OpenAI<br/>GPT-4/4o"]
+    Registry --> Anthropic["Anthropic<br/>Claude 3.5"]
+    Registry --> Azure["Azure OpenAI<br/>GPT-4"]
+    Registry --> Ollama["Ollama<br/>(Self-hosted)"]
+
+    subgraph Features["AI Features"]
+        F1["Natural Language → BPMN"]
+        F2["Form Schema Generation"]
+        F3["Workflow Optimization"]
+        F4["Interactive Chat Assistant"]
+        F5["Multi-provider Fallback"]
+    end
+
+    AIService --> Features
+```
+
+</details>
 
 **AI Provider Interface:**
 ```typescript

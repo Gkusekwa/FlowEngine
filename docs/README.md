@@ -77,8 +77,8 @@ A modern, distributed workflow engine built with Node.js/TypeScript that support
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/flow-engine.git
-cd flow-engine
+git clone https://github.com/Gkusekwa/FlowEngine.git
+cd FlowEngine
 
 # Install dependencies
 pnpm install
