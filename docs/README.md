@@ -178,6 +178,7 @@ FlowEngine/
 ### Backend
 - **NestJS 10** - Modular Node.js framework with dependency injection
 - **TypeORM** - Database ORM with migration support
+  > *Note: [Drizzle ORM](https://orm.drizzle.team/) and [Prisma](https://www.prisma.io/) are modern alternatives with better type safety and query performance if starting fresh.*
 - **BullMQ** - Redis-backed distributed job queue
 - **bpmn-moddle** - BPMN 2.0 XML parsing and validation
 - **Socket.io** - Real-time WebSocket communication
