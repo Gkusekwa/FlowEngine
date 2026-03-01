@@ -16,7 +16,7 @@ CORS must be explicitly configured per environment. The wildcard `*` is **only**
 
 ### Configuration
 
-The CORS options builder (located at `src/common/config/cors.config.ts`) enforces the following behavior:
+CORS is handled by the built-in `@nestjs/common` CORS middleware (wrapping the `cors` npm package), configured in `src/common/config/cors.config.ts`. The options builder enforces the following behavior:
 
 1. If `CORS_ORIGINS` is unset or set to `*` and `NODE_ENV` is `production`, the application throws an error at startup requiring explicit origin configuration.
 2. In development (non-production), if `CORS_ORIGINS` is unset or `*`, all origins are allowed with credentials enabled.
@@ -121,7 +121,7 @@ Service tasks allow users to configure arbitrary HTTP endpoints. Without validat
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                  Service Task HTTP Client                   │
+│           Service Task HTTP Client (Axios)                  │
 ├──────────────────────────────────────────────────────────┤
 │                                                            │
 │  Request URL                                               │
@@ -186,7 +186,7 @@ If any resolved IP falls within a blocked range, the request is rejected with an
 
 ### Redirect Handling
 
-The HTTP client does not follow redirects automatically. Instead, it enforces a maximum redirect count (default 5) and re-validates each redirect target through the full SSRF guard pipeline. For each request:
+The HTTP client (`@nestjs/axios` wrapping Axios) does not follow redirects automatically. Instead, it enforces a maximum redirect count (default 5) and re-validates each redirect target through the full SSRF guard pipeline. For each request:
 
 1. The current URL is validated through the SSRF guard.
 2. The request is issued with redirect mode set to `manual`.

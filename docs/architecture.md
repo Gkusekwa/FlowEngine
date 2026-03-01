@@ -91,7 +91,7 @@ flowchart TB
 The entry point for all client requests. Handles:
 - **Authentication**: JWT-based token validation
 - **Authorization**: Role-based access control
-- **Rate Limiting**: Protects against abuse
+- **Rate Limiting**: Protects against abuse (`@nestjs/throttler`)
 - **Request Routing**: Directs requests to appropriate services
 
 ### 2. Workflow Definition Service
@@ -1652,7 +1652,7 @@ Pre-built connectors for common integrations:
 
 ### GraphQL API
 
-Full GraphQL endpoint alongside REST:
+Full GraphQL endpoint alongside REST, powered by Apollo Server (`@nestjs/apollo`, `@nestjs/graphql`) using a code-first schema approach:
 
 ```graphql
 type Query {

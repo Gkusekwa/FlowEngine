@@ -2350,7 +2350,7 @@ GET /shifts/metrics?date=2024-01-21
 
 ## GraphQL API
 
-FlowEngine also provides a GraphQL endpoint at `/graphql`.
+FlowEngine provides a GraphQL endpoint at `/graphql`, powered by **Apollo Server** integrated via `@nestjs/apollo` and `@nestjs/graphql`. The schema follows a **code-first** approach using TypeScript decorators, with automatic schema generation from resolver classes.
 
 ### Endpoint
 
@@ -2501,7 +2501,7 @@ subscription SLAAlerts($workflowId: ID) {
 
 ### GraphQL Playground
 
-Access the GraphQL Playground at `/graphql` in development mode for interactive query building and schema exploration.
+Apollo Sandbox is available at `/graphql` in development mode for interactive query building and schema exploration. Set `GRAPHQL_PLAYGROUND=true` in `.env` to enable it.
 
 ---
 

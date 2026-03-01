@@ -179,10 +179,15 @@ FlowEngine/
 - **NestJS 10** - Modular Node.js framework with dependency injection
 - **TypeORM** - Database ORM with migration support
   > *Note: [Drizzle ORM](https://orm.drizzle.team/) and [Prisma](https://www.prisma.io/) are modern alternatives with better type safety and query performance if starting fresh.*
+- **Apollo Server** (`@nestjs/apollo`, `@nestjs/graphql`) - Code-first GraphQL API
+- **Axios** (`@nestjs/axios`) - HTTP client for service tasks and external integrations
 - **BullMQ** - Redis-backed distributed job queue
 - **bpmn-moddle** - BPMN 2.0 XML parsing and validation
+- **Sharp** - High-performance image processing (thumbnails, metadata extraction)
 - **Socket.io** - Real-time WebSocket communication
 - **Zod** - Runtime schema validation
+- **@nestjs/throttler** - API rate limiting per key, user, and tenant tier
+- **@nestjs/common CORS** - Origin-based CORS policy enforcement
 - **OpenTelemetry** - Distributed tracing and observability
 
 ### Frontend
