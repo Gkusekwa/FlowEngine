@@ -595,7 +595,7 @@ spec:
         spec:
           containers:
             - name: backup
-              image: postgres:15-alpine
+              image: postgres:18-alpine
               command:
                 - /bin/sh
                 - -c

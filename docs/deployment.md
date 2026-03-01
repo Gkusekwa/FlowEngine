@@ -8,7 +8,7 @@ This guide covers deploying FlowEngine in various environments, from local devel
 - Docker Compose 2.20+ (for local development)
 - Kubernetes 1.28+ (for production)
 - Helm 3.12+ (optional, for K8s deployment)
-- PostgreSQL 15+
+- PostgreSQL 18
 - Redis 7+
 
 ---
@@ -23,7 +23,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:18-alpine
     environment:
       POSTGRES_USER: flowengine
       POSTGRES_PASSWORD: flowengine
@@ -508,7 +508,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:15-alpine
+          image: postgres:18-alpine
           ports:
             - containerPort: 5432
           env:
@@ -671,7 +671,7 @@ spec:
         spec:
           containers:
             - name: backup
-              image: postgres:15-alpine
+              image: postgres:18-alpine
               command:
                 - /bin/sh
                 - -c

@@ -119,7 +119,7 @@ docs(api): update authentication examples
 
 - Node.js 20+
 - pnpm 8+
-- PostgreSQL 15+
+- PostgreSQL 18
 - Redis 7+
 - Docker (optional, for containerized development)
 

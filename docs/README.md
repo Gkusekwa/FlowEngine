@@ -69,7 +69,7 @@ A modern, distributed workflow engine built with Node.js/TypeScript that support
 ### Prerequisites
 
 - Node.js 20+
-- PostgreSQL 15+
+- PostgreSQL 18
 - Redis 7+
 - pnpm (recommended) or npm
 
@@ -205,7 +205,7 @@ FlowEngine/
 - **React Query (TanStack Query)** - Server state and caching
 
 ### Infrastructure
-- **PostgreSQL 15+** - Primary database with JSONB support
+- **PostgreSQL 18** - Primary database with JSONB support
 - **Redis 7+** - Job queues, caching, and pub/sub
 - **Docker** - Containerization and orchestration
 
