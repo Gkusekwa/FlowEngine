@@ -117,35 +117,42 @@ VITE_API_URL=http://localhost:3000/api/v1
 ```
 FlowEngine/
 ├── apps/
-│   ├── api/                 # NestJS backend
+│   ├── api/                     # NestJS backend
 │   │   ├── src/
 │   │   │   ├── modules/
-│   │   │   │   ├── workflow/    # Workflow definition service
-│   │   │   │   ├── execution/   # Execution engine
-│   │   │   │   ├── task/        # Task management
-│   │   │   │   └── sla/         # SLA monitoring
+│   │   │   │   ├── workflow/        # Workflow definition service
+│   │   │   │   ├── execution/       # Execution engine
+│   │   │   │   ├── task/            # Task management
+│   │   │   │   ├── sla/             # SLA monitoring
+│   │   │   │   └── file/            # File uploads, Sharp image processing
+│   │   │   ├── graphql/             # Apollo resolvers (code-first)
 │   │   │   ├── infrastructure/
-│   │   │   │   ├── database/    # TypeORM entities & migrations
-│   │   │   │   └── queues/      # BullMQ configuration
-│   │   │   └── workers/         # Background job workers
+│   │   │   │   ├── database/        # TypeORM entities & migrations
+│   │   │   │   ├── queues/          # BullMQ configuration
+│   │   │   │   ├── http/            # Axios clients for integrations
+│   │   │   │   ├── telemetry/       # OpenTelemetry tracing setup
+│   │   │   │   └── guards/          # Auth, throttler, CORS
+│   │   │   └── workers/             # Background job workers
 │   │   └── package.json
 │   │
-│   └── web/                 # React frontend
+│   └── web/                     # React frontend
 │       ├── src/
 │       │   ├── components/
 │       │   │   ├── workflow-editor/
 │       │   │   ├── dashboard/
 │       │   │   └── sla-monitoring/
 │       │   ├── hooks/
-│       │   ├── stores/
-│       │   └── services/
+│       │   ├── stores/              # Zustand stores
+│       │   └── services/            # React Query + API clients
 │       └── package.json
 │
 ├── packages/
-│   └── shared/              # Shared types and utilities
+│   ├── shared/                  # Shared types and utilities
+│   └── schemas/                 # Zod validation schemas
 │
-├── docs/                    # Documentation
-└── docker-compose.yml       # Local development setup
+├── docs/                        # Documentation
+├── k8s/                         # Kubernetes manifests
+└── docker-compose.yml           # Local development setup
 ```
 
 ## Documentation
