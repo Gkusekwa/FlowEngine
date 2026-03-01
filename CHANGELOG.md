@@ -9,16 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial project documentation
-- Architecture overview with system diagrams
+- Architecture overview with system diagrams and Mermaid support
 - BPMN 2.0 support documentation
 - Task execution mechanics guide
 - Domain models and TypeScript interfaces
 - Database schema with multi-tenancy support
 - Comprehensive API reference (REST and GraphQL)
+- Error code registry with standardized response formats
 - SLA monitoring guide with shift-based scheduling
 - Integration guide for external applications
 - Analytics & BI integration (Power BI, Metabase, Superset, Tableau)
 - AI agent integration documentation
+- Security hardening guide (CORS, expression sandboxing, SSRF, JWT, LDAP, API keys)
+- Concurrency & data integrity guide (distributed locking, race conditions)
+- Operations guide (migrations, logging, alerting, disaster recovery)
+- Workflow versioning documentation (multi-version execution, state machines)
 - Deployment guide (Docker, Kubernetes)
 
 ### Core Features Documented
