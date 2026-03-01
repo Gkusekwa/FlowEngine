@@ -1,6 +1,6 @@
-# FlowEngine - Lightweight Workflow Engine with SLA Monitoring
+# FlowEngine - Enterprise Workflow Engine with SLA Monitoring
 
-A modern, distributed workflow engine built with Node.js/TypeScript that supports BPMN 2.0 diagrams, real-time SLA monitoring, AI-assisted design, and a beautiful React-based UI.
+A modern, distributed workflow engine built with Node.js/TypeScript that supports BPMN 2.0 diagrams, real-time SLA monitoring, AI-assisted design, and a beautiful React-based UI. Designed for horizontal scalability, multi-tenancy, and enterprise-grade reliability.
 
 ## Features
 
