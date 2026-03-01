@@ -150,14 +150,27 @@ flow-engine/
 
 ## Documentation
 
+### Architecture & Design
+
 - [Architecture Overview](./architecture.md) - System architecture, components, data flow
 - [BPMN Support](./bpmn-support.md) - Supported BPMN elements and task configurations
 - [Task Execution Mechanics](./task-execution.md) - Internal execution engine details
 - [Domain Models](./domain-models.md) - TypeScript interfaces and types
 - [Database Schema](./database-schema.md) - Entity relationships and migrations
+- [Workflow Versioning](./workflow-versioning.md) - Multi-version execution, version lifecycle, multi-client tenancy, state machines
+
+### API & Integration
+
 - [API Reference](./api-reference.md) - REST and GraphQL endpoints
+- [Error Code Registry](./error-codes.md) - Standardized error codes, response formats, client handling guide
 - [SLA Monitoring Guide](./sla-monitoring.md) - SLA tracking and escalations
 - [Integration Guide](./integration-guide.md) - Webhooks, triggers, connectors, AI agents, analytics & BI
+
+### Security & Operations
+
+- [Security Hardening](./security-hardening.md) - CORS, expression sandboxing, SSRF prevention, JWT lifecycle, LDAP safety, API key management
+- [Concurrency & Integrity](./concurrency-integrity.md) - Distributed locking, race condition mitigation, optimistic concurrency, idempotency
+- [Operations Guide](./operations-guide.md) - Migrations, logging, alerting, disaster recovery, audit log lifecycle
 - [Deployment Guide](./deployment.md) - Production deployment instructions
 
 ## Tech Stack
