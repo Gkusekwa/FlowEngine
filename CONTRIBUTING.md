@@ -157,6 +157,8 @@ FlowEngine/
 
 ### Testing
 
+We use **Vitest** for unit and integration tests, and **Playwright** for end-to-end tests.
+
 - Unit tests: `pnpm test`
 - Integration tests: `pnpm test:integration`
 - E2E tests: `pnpm test:e2e`

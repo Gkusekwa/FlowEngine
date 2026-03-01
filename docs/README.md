@@ -176,23 +176,30 @@ FlowEngine/
 ## Tech Stack
 
 ### Backend
-- **NestJS** - Node.js framework
-- **TypeORM** - Database ORM
-- **BullMQ** - Distributed job queue
-- **bpmn-moddle** - BPMN XML parsing
-- **Socket.io** - Real-time communication
+- **NestJS 10** - Modular Node.js framework with dependency injection
+- **TypeORM** - Database ORM with migration support
+- **BullMQ** - Redis-backed distributed job queue
+- **bpmn-moddle** - BPMN 2.0 XML parsing and validation
+- **Socket.io** - Real-time WebSocket communication
+- **Zod** - Runtime schema validation
+- **OpenTelemetry** - Distributed tracing and observability
 
 ### Frontend
-- **React 18** - UI framework
-- **bpmn-js** - BPMN modeler/viewer
-- **TailwindCSS** - Styling
-- **Zustand** - State management
-- **React Query** - Data fetching
+- **React 18** - UI framework with concurrent features
+- **bpmn-js** - BPMN modeler and viewer
+- **TailwindCSS** - Utility-first styling
+- **Zustand** - Lightweight state management
+- **React Query (TanStack Query)** - Server state and caching
 
 ### Infrastructure
-- **PostgreSQL** - Primary database
-- **Redis** - Job queues and caching
-- **Docker** - Containerization
+- **PostgreSQL 15+** - Primary database with JSONB support
+- **Redis 7+** - Job queues, caching, and pub/sub
+- **Docker** - Containerization and orchestration
+
+### Testing & Quality
+- **Vitest** - Fast unit and integration testing
+- **Playwright** - End-to-end testing
+- **ESLint + Prettier** - Code quality and formatting
 
 ## License
 

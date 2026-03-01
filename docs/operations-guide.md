@@ -491,6 +491,62 @@ spec:
             description: "Possible token theft. {{ $value }} reuse attempts in the last hour."
 ```
 
+### Distributed Tracing (OpenTelemetry)
+
+FlowEngine integrates OpenTelemetry for distributed tracing across all services. This enables end-to-end request tracking through the workflow execution pipeline.
+
+**Configuration:**
+
+```typescript
+// src/telemetry/tracing.ts
+import { NodeSDK } from '@opentelemetry/sdk-node';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+
+const sdk = new NodeSDK({
+  traceExporter: new OTLPTraceExporter({
+    url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://jaeger:4318/v1/traces',
+  }),
+  instrumentations: [getNodeAutoInstrumentations()],
+  serviceName: process.env.SERVICE_NAME || 'flowengine-api',
+});
+
+sdk.start();
+```
+
+**Kubernetes Deployment with Jaeger:**
+
+```yaml
+# k8s/jaeger.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+  template:
+    metadata:
+      labels:
+        app: jaeger
+    spec:
+      containers:
+        - name: jaeger
+          image: jaegertracing/all-in-one:1.50
+          ports:
+            - containerPort: 16686  # UI
+            - containerPort: 4318   # OTLP HTTP
+          env:
+            - name: COLLECTOR_OTLP_ENABLED
+              value: "true"
+```
+
+**Trace Context Propagation:**
+
+All HTTP requests and BullMQ jobs automatically propagate trace context via W3C Trace Context headers (`traceparent`, `tracestate`).
+
 ---
 
 ## 5. Disaster Recovery

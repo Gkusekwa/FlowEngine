@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Operations guide (migrations, logging, alerting, disaster recovery)
 - Workflow versioning documentation (multi-version execution, state machines)
 - Deployment guide (Docker, Kubernetes)
+- OpenTelemetry distributed tracing configuration
+- Refined tech stack with Zod validation and Vitest/Playwright testing
 
 ### Core Features Documented
 - Visual workflow designer with bpmn-js
