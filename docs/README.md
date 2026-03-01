@@ -117,42 +117,63 @@ VITE_API_URL=http://localhost:3000/api/v1
 ```
 FlowEngine/
 ├── apps/
-│   ├── api/                     # NestJS backend
+│   ├── api/                        # NestJS backend
 │   │   ├── src/
+│   │   │   ├── common/                 # Shared utilities, filters, pipes, decorators
+│   │   │   ├── engine/                 # Core execution engine
+│   │   │   │   ├── expression/             # Expression sandbox (isolated-vm)
+│   │   │   │   ├── handlers/               # Task type handlers (user, service, gateway)
+│   │   │   │   ├── http/                   # HTTP executor with SSRF guard
+│   │   │   │   └── retry/                  # Retry policies, circuit breaker, DLQ
 │   │   │   ├── modules/
-│   │   │   │   ├── workflow/        # Workflow definition service
-│   │   │   │   ├── execution/       # Execution engine
-│   │   │   │   ├── task/            # Task management
-│   │   │   │   ├── sla/             # SLA monitoring
-│   │   │   │   └── file/            # File uploads, Sharp image processing
-│   │   │   ├── graphql/             # Apollo resolvers (code-first)
+│   │   │   │   ├── auth/                   # Authentication (local, OAuth2, Keycloak)
+│   │   │   │   ├── tenant/                 # Tenant management
+│   │   │   │   ├── workflow/               # Workflow definition CRUD, BPMN parsing
+│   │   │   │   ├── execution/              # Execution engine, instance management
+│   │   │   │   ├── task/                   # Task lifecycle, claiming, completion
+│   │   │   │   ├── sla/                    # SLA monitoring, escalations
+│   │   │   │   ├── group/                  # User group management
+│   │   │   │   ├── audit/                  # Audit logging
+│   │   │   │   ├── metrics/                # Workflow metrics aggregation
+│   │   │   │   └── websocket/              # Socket.io gateway for real-time events
 │   │   │   ├── infrastructure/
-│   │   │   │   ├── database/        # TypeORM entities & migrations
-│   │   │   │   ├── queues/          # BullMQ configuration
-│   │   │   │   ├── http/            # Axios clients for integrations
-│   │   │   │   ├── telemetry/       # OpenTelemetry tracing setup
-│   │   │   │   └── guards/          # Auth, throttler, CORS
-│   │   │   └── workers/             # Background job workers
+│   │   │   │   ├── database/               # TypeORM config, entities, migrations
+│   │   │   │   ├── redis/                  # Redis client, distributed locks (Redlock)
+│   │   │   │   ├── queues/                 # BullMQ queue definitions
+│   │   │   │   ├── guards/                 # JWT, roles, tenant, throttler guards
+│   │   │   │   ├── health/                 # Health check endpoints
+│   │   │   │   └── telemetry/              # OpenTelemetry setup
+│   │   │   └── workers/                    # BullMQ job processors
+│   │   ├── test/                        # Integration and e2e tests
 │   │   └── package.json
 │   │
-│   └── web/                     # React frontend
+│   └── web/                        # React frontend (Vite)
 │       ├── src/
 │       │   ├── components/
-│       │   │   ├── workflow-editor/
-│       │   │   ├── dashboard/
-│       │   │   └── sla-monitoring/
-│       │   ├── hooks/
-│       │   ├── stores/              # Zustand stores
-│       │   └── services/            # React Query + API clients
+│       │   │   ├── workflow-editor/         # BPMN modeler, properties panel, form builder
+│       │   │   ├── dashboard/               # Dashboard widgets, metrics charts
+│       │   │   ├── task-inbox/              # Task list, task detail, form renderer
+│       │   │   ├── sla-monitoring/          # SLA dashboard, breach list
+│       │   │   ├── admin/                   # Tenant settings, user/group management
+│       │   │   └── common/                  # Shared UI components, layouts, toasts
+│       │   ├── hooks/                   # Custom React hooks
+│       │   ├── stores/                  # Zustand state stores
+│       │   ├── services/                # API client, WebSocket manager
+│       │   └── pages/                   # Route-level page components
 │       └── package.json
 │
 ├── packages/
-│   ├── shared/                  # Shared types and utilities
-│   └── schemas/                 # Zod validation schemas
+│   └── shared/                     # Shared types, constants, error codes
 │
-├── docs/                        # Documentation
-├── k8s/                         # Kubernetes manifests
-└── docker-compose.yml           # Local development setup
+├── k8s/                            # Kubernetes manifests
+│   ├── api/                            # API deployment, service, HPA
+│   ├── worker/                         # Worker deployment
+│   ├── web/                            # Web deployment, ingress
+│   └── infrastructure/                 # ConfigMaps, Secrets, PVCs
+│
+├── docs/                           # Documentation
+├── docker-compose.yml              # Local development setup
+└── pnpm-workspace.yaml             # Monorepo workspace config
 ```
 
 ## Documentation
