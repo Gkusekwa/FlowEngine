@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+.git
+.env
+*.md
+!README.md
+.vscode
+.idea
+coverage
+test-results
+playwright-report

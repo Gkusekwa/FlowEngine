@@ -1,0 +1,34 @@
+{
+  "name": "flowengine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Enterprise Workflow Engine with SLA Monitoring",
+  "author": "Kusekwa",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "bcrypt",
+      "esbuild",
+      "msgpackr-extract"
+    ]
+  },
+  "scripts": {
+    "dev": "pnpm --filter @flowengine/api dev & pnpm --filter @flowengine/web dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "test": "pnpm -r test",
+    "test:integration": "pnpm --filter @flowengine/api test:integration",
+    "test:e2e": "pnpm --filter @flowengine/web test:e2e",
+    "test:coverage": "pnpm -r test:coverage",
+    "db:migrate": "pnpm --filter @flowengine/api db:migrate",
+    "db:migrate:generate": "pnpm --filter @flowengine/api db:migrate:generate",
+    "db:migrate:revert": "pnpm --filter @flowengine/api db:migrate:revert",
+    "clean": "pnpm -r clean && rm -rf node_modules"
+  }
+}

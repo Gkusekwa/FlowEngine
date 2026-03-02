@@ -1,0 +1,81 @@
+// Role permission mappings
+export const ROLE_PERMISSIONS: Record<string, string[]> = {
+  owner: [
+    'tenants:manage',
+    'members:manage',
+    'workflows:create',
+    'workflows:read',
+    'workflows:update',
+    'workflows:delete',
+    'workflows:publish',
+    'instances:create',
+    'instances:read',
+    'instances:cancel',
+    'tasks:read',
+    'tasks:claim',
+    'tasks:complete',
+    'tasks:assign',
+    'tasks:delegate',
+    'sla:read',
+    'audit:read',
+    'groups:manage',
+    'settings:manage',
+  ],
+  admin: [
+    'members:manage',
+    'workflows:create',
+    'workflows:read',
+    'workflows:update',
+    'workflows:delete',
+    'workflows:publish',
+    'instances:create',
+    'instances:read',
+    'instances:cancel',
+    'tasks:read',
+    'tasks:claim',
+    'tasks:complete',
+    'tasks:assign',
+    'tasks:delegate',
+    'sla:read',
+    'audit:read',
+    'groups:manage',
+    'settings:manage',
+  ],
+  designer: [
+    'workflows:create',
+    'workflows:read',
+    'workflows:update',
+    'workflows:delete',
+    'workflows:publish',
+    'instances:read',
+    'tasks:read',
+    'sla:read',
+  ],
+  operator: [
+    'workflows:read',
+    'instances:create',
+    'instances:read',
+    'instances:cancel',
+    'tasks:read',
+    'tasks:claim',
+    'tasks:complete',
+    'tasks:assign',
+    'tasks:delegate',
+    'sla:read',
+  ],
+  viewer: ['workflows:read', 'instances:read', 'tasks:read', 'sla:read'],
+};
+
+// JWT defaults
+export const JWT_DEFAULTS = {
+  ACCESS_EXPIRY: '15m',
+  REFRESH_EXPIRY: '7d',
+  ALGORITHM: 'HS256' as const,
+};
+
+// Pagination defaults
+export const PAGINATION_DEFAULTS = {
+  PAGE: 1,
+  PAGE_SIZE: 20,
+  MAX_PAGE_SIZE: 100,
+};
