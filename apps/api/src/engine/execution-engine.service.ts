@@ -65,62 +65,71 @@ export class ExecutionEngineService {
   /**
    * Advance a token through the workflow graph.
    * This is the core execution loop.
+   * Public method acquires lock, then delegates to internal implementation.
    */
   async advanceToken(tenantId: string, instanceId: string, tokenId: string): Promise<void> {
-    await this.lockService.withLock(`instance:${instanceId}`, 10000, async () => {
-      const token = await this.tokenManager.findById(tokenId);
-      if (!token || token.status !== TokenStatus.ACTIVE) {
-        this.logger.warn(`Token ${tokenId} is not active, skipping advancement`);
-        return;
-      }
-
-      const activity = await this.activityRepo.findOne({
-        where: { id: token.currentActivityId! },
-      });
-      if (!activity) throw new Error(`Activity ${token.currentActivityId} not found`);
-
-      this.logger.debug(`Advancing token ${tokenId} at activity ${activity.name || activity.bpmnElementId} (${activity.type})`);
-
-      // Check if this is a gateway
-      if (this.isGateway(activity.type)) {
-        await this.handleGateway(tenantId, instanceId, tokenId, activity);
-        return;
-      }
-
-      // Get the handler for this activity type
-      const handler = this.taskExecutorRegistry.getHandler(activity.type);
-      if (!handler) {
-        this.logger.error(`No handler registered for activity type: ${activity.type}`);
-        await this.failInstance(instanceId, `No handler for activity type: ${activity.type}`);
-        return;
-      }
-
-      // Build execution context
-      const variables = await this.variableManager.getVariables(instanceId);
-      const context: TaskExecutionContext = {
-        tenantId,
-        workflowInstanceId: instanceId,
-        tokenId,
-        activityDefinition: activity,
-        variables,
-      };
-
-      // Execute the handler
-      const result = await handler.execute(context);
-
-      switch (result) {
-        case 'completed':
-          await this.moveToNext(tenantId, instanceId, tokenId, activity);
-          break;
-        case 'waiting':
-          await this.tokenManager.setWaiting(tokenId);
-          this.logger.debug(`Token ${tokenId} is now waiting at ${activity.name || activity.bpmnElementId}`);
-          break;
-        case 'failed':
-          await this.failInstance(instanceId, `Activity ${activity.name || activity.bpmnElementId} failed`);
-          break;
-      }
+    await this.lockService.withLock(`instance:${instanceId}`, 30000, async () => {
+      await this._advanceTokenInternal(tenantId, instanceId, tokenId);
     });
+  }
+
+  /**
+   * Internal token advancement - called from within a lock.
+   * Handles recursive advancement without re-acquiring the lock.
+   */
+  private async _advanceTokenInternal(tenantId: string, instanceId: string, tokenId: string): Promise<void> {
+    const token = await this.tokenManager.findById(tokenId);
+    if (!token || token.status !== TokenStatus.ACTIVE) {
+      this.logger.warn(`Token ${tokenId} is not active, skipping advancement`);
+      return;
+    }
+
+    const activity = await this.activityRepo.findOne({
+      where: { id: token.currentActivityId! },
+    });
+    if (!activity) throw new Error(`Activity ${token.currentActivityId} not found`);
+
+    this.logger.debug(`Advancing token ${tokenId} at activity ${activity.name || activity.bpmnElementId} (${activity.type})`);
+
+    // Check if this is a gateway
+    if (this.isGateway(activity.type)) {
+      await this.handleGateway(tenantId, instanceId, tokenId, activity);
+      return;
+    }
+
+    // Get the handler for this activity type
+    const handler = this.taskExecutorRegistry.getHandler(activity.type);
+    if (!handler) {
+      this.logger.error(`No handler registered for activity type: ${activity.type}`);
+      await this.failInstance(instanceId, `No handler for activity type: ${activity.type}`);
+      return;
+    }
+
+    // Build execution context
+    const variables = await this.variableManager.getVariables(instanceId);
+    const context: TaskExecutionContext = {
+      tenantId,
+      workflowInstanceId: instanceId,
+      tokenId,
+      activityDefinition: activity,
+      variables,
+    };
+
+    // Execute the handler
+    const result = await handler.execute(context);
+
+    switch (result) {
+      case 'completed':
+        await this.moveToNext(tenantId, instanceId, tokenId, activity);
+        break;
+      case 'waiting':
+        await this.tokenManager.setWaiting(tokenId);
+        this.logger.debug(`Token ${tokenId} is now waiting at ${activity.name || activity.bpmnElementId}`);
+        break;
+      case 'failed':
+        await this.failInstance(instanceId, `Activity ${activity.name || activity.bpmnElementId} failed`);
+        break;
+    }
   }
 
   /**
@@ -191,9 +200,9 @@ export class ExecutionEngineService {
       // Release lock before recursive call
     }
 
-    // For single transition, advance again (outside lock via continueExecution pattern)
+    // For single transition, advance again (already within lock)
     if (outgoing.length === 1) {
-      await this.advanceToken(tenantId, instanceId, tokenId);
+      await this._advanceTokenInternal(tenantId, instanceId, tokenId);
     }
   }
 
@@ -254,7 +263,7 @@ export class ExecutionEngineService {
     if (!targetActivity) throw new Error(`Target activity ${selectedTransition.targetActivityId} not found`);
 
     await this.tokenManager.moveToken(tokenId, targetActivity.id);
-    await this.advanceToken(tenantId, instanceId, tokenId);
+    await this._advanceTokenInternal(tenantId, instanceId, tokenId);
   }
 
   private async handleParallelDiverging(
@@ -279,10 +288,9 @@ export class ExecutionEngineService {
 
     this.logger.log(`Parallel fork at ${gateway.bpmnElementId}: created ${childTokens.length} tokens`);
 
-    // Advance each child token (release lock first, then advance)
+    // Advance each child token (already within lock)
     for (const childToken of childTokens) {
-      // Each advanceToken acquires its own lock
-      await this.advanceToken(tenantId, instanceId, childToken.id);
+      await this._advanceTokenInternal(tenantId, instanceId, childToken.id);
     }
   }
 
@@ -322,7 +330,7 @@ export class ExecutionEngineService {
 
         // Create a new continuation token
         const continuationToken = await this.tokenManager.createRootToken(instanceId, targetActivity.id);
-        await this.advanceToken(tenantId, instanceId, continuationToken.id);
+        await this._advanceTokenInternal(tenantId, instanceId, continuationToken.id);
       } else {
         await this.checkInstanceCompletion(instanceId);
       }

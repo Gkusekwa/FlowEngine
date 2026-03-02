@@ -94,18 +94,12 @@ export class TaskService {
         });
       }
 
-      // Conditional update — race protection
-      const result = await this.taskRepo.update(
-        { id: taskId, assignedTo: null as unknown as string, status: TaskStatus.PENDING },
-        { assignedTo: userId, status: TaskStatus.ACTIVE, startedAt: new Date() },
-      );
-
-      if (result.affected === 0) {
-        throw new BadRequestException({
-          code: ErrorCodes.TASK_ALREADY_CLAIMED,
-          message: 'Task was claimed by another user',
-        });
-      }
+      // Update the task - we already hold the lock and verified state above
+      await this.taskRepo.update(taskId, {
+        assignedTo: userId,
+        status: TaskStatus.ACTIVE,
+        startedAt: new Date(),
+      });
 
       await this.historyRepo.save(
         this.historyRepo.create({

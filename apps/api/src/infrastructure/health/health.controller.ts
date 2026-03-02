@@ -1,8 +1,10 @@
 import { Controller, Get, Inject } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { DataSource } from 'typeorm';
 import Redis from 'ioredis';
 import { REDIS_CLIENT } from '../redis/redis.module';
 
+@ApiTags('health')
 @Controller('health')
 export class HealthController {
   constructor(
@@ -11,11 +13,13 @@ export class HealthController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Basic health check' })
   async health() {
     return { status: 'healthy', timestamp: new Date().toISOString() };
   }
 
   @Get('ready')
+  @ApiOperation({ summary: 'Readiness probe - checks all dependencies' })
   async ready() {
     const dbReady = this.dataSource.isInitialized;
     const redisReady = this.redis.status === 'ready';
@@ -30,11 +34,13 @@ export class HealthController {
   }
 
   @Get('live')
+  @ApiOperation({ summary: 'Liveness probe' })
   live() {
     return { alive: true };
   }
 
   @Get('db')
+  @ApiOperation({ summary: 'Database health with latency' })
   async dbHealth() {
     const start = Date.now();
     await this.dataSource.query('SELECT 1');
@@ -44,6 +50,7 @@ export class HealthController {
   }
 
   @Get('redis')
+  @ApiOperation({ summary: 'Redis health with latency' })
   async redisHealth() {
     const start = Date.now();
     await this.redis.ping();

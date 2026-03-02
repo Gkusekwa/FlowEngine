@@ -13,7 +13,7 @@ export { REDIS_CLIENT } from './redis.constants';
     {
       provide: REDIS_CLIENT,
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
+      useFactory: async (config: ConfigService) => {
         const redis = new Redis({
           host: config.get<string>('REDIS_HOST', 'localhost'),
           port: config.get<number>('REDIS_PORT', 6379),
@@ -26,6 +26,18 @@ export { REDIS_CLIENT } from './redis.constants';
           console.error('Redis connection error:', err.message);
         });
 
+        // Wait for connection to be ready before returning
+        // This is required for Redlock 5.x to function properly
+        await new Promise<void>((resolve, reject) => {
+          if (redis.status === 'ready') {
+            resolve();
+          } else {
+            redis.once('ready', resolve);
+            redis.once('error', reject);
+          }
+        });
+
+        console.log('Redis client connected and ready');
         return redis;
       },
     },
