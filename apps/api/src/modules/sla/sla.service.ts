@@ -170,9 +170,10 @@ export class SlaService {
       return existing; // Already recorded
     }
 
-    // Calculate actual duration
+    // Calculate actual duration from when the task was started (or created if not yet started)
+    const startTime = (task.startedAt || task.createdAt).getTime();
     const actualDurationSeconds = Math.floor(
-      (Date.now() - task.createdAt.getTime()) / 1000,
+      (Date.now() - startTime) / 1000,
     );
 
     const event = this.slaEventRepo.create({

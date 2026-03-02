@@ -130,4 +130,7 @@ export enum AuditAction {
   MEMBER_INVITED = 'member.invited',
   MEMBER_REMOVED = 'member.removed',
   MEMBER_ROLE_CHANGED = 'member.role_changed',
+  LIBRARY_WORKFLOW_SHARED = 'library.workflow_shared',
+  LIBRARY_WORKFLOW_IMPORTED = 'library.workflow_imported',
+  LIBRARY_WORKFLOW_UNSHARED = 'library.workflow_unshared',
 }

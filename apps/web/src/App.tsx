@@ -16,6 +16,7 @@ import { TaskDetailPage } from './pages/TaskDetailPage';
 import { AdminPage } from './pages/AdminPage';
 import { SlaPage } from './pages/SlaPage';
 import { AuditPage } from './pages/AuditPage';
+import { SharedLibraryPage } from './pages/SharedLibraryPage';
 import { AppLayout } from './components/common/AppLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { ToastContainer } from './components/common/ToastContainer';
@@ -49,6 +50,7 @@ export function App() {
           <Route element={<AppLayout />}>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/workflows" element={<WorkflowsPage />} />
+            <Route path="/library" element={<SharedLibraryPage />} />
             <Route path="/workflows/:id" element={<WorkflowEditorPage />} />
             <Route path="/instances" element={<InstancesPage />} />
             <Route path="/instances/:id" element={<InstanceDetailPage />} />

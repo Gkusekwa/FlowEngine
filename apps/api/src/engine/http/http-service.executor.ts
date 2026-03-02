@@ -7,7 +7,10 @@ export interface HttpServiceConfig {
   headers?: Record<string, string>;
   body?: unknown;
   timeout?: number;
+  maxResponseSize?: number;
 }
+
+const DEFAULT_MAX_RESPONSE_SIZE = 1 * 1024 * 1024; // 1MB
 
 @Injectable()
 export class HttpServiceExecutor {
@@ -46,7 +49,41 @@ export class HttpServiceExecutor {
         signal: controller.signal,
       });
 
-      const responseBody = await response.text();
+      // Enforce response size limit to prevent DoS
+      const maxSize = config.maxResponseSize || DEFAULT_MAX_RESPONSE_SIZE;
+      const contentLength = response.headers.get('content-length');
+      if (contentLength && parseInt(contentLength, 10) > maxSize) {
+        throw new Error(
+          `HTTP ${method} ${url} response too large: ${contentLength} bytes (max ${maxSize})`,
+        );
+      }
+
+      // Read body with size limit using streaming
+      const reader = response.body?.getReader();
+      const chunks: Uint8Array[] = [];
+      let totalSize = 0;
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          totalSize += value.byteLength;
+          if (totalSize > maxSize) {
+            reader.cancel();
+            throw new Error(
+              `HTTP ${method} ${url} response too large: exceeded ${maxSize} bytes`,
+            );
+          }
+          chunks.push(value);
+        }
+      }
+
+      const responseBody = new TextDecoder().decode(
+        chunks.length === 1
+          ? chunks[0]
+          : new Uint8Array(chunks.reduce((acc, c) => [...acc, ...c], [] as number[])),
+      );
+
       let parsedBody: unknown;
       try {
         parsedBody = JSON.parse(responseBody);

@@ -242,6 +242,29 @@ export interface RetryPolicy {
   multiplier?: number;
 }
 
+// --- Shared Workflow Library ---
+
+export interface SharedWorkflowSummary {
+  id: string;
+  name: string;
+  description?: string;
+  category?: string;
+  tags: string[];
+  sourceTenantName: string;
+  sharedByUserName: string;
+  sourceVersion: number;
+  importCount: number;
+  createdAt: string;
+}
+
+export interface SharedWorkflowDetail extends SharedWorkflowSummary {
+  bpmnXml: string;
+  activityConfigs: { bpmnElementId: string; type: string; name: string; config: Record<string, unknown> }[];
+  slaConfigs: { bpmnElementId: string; warningThresholdSeconds?: number | null; breachThresholdSeconds: number; escalationRules?: Record<string, unknown>[]; notificationChannels?: string[] }[];
+}
+
+export type SharedLibraryImportMode = 'use' | 'customize';
+
 // --- WebSocket Events ---
 
 export enum WsEvent {

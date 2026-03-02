@@ -16,6 +16,7 @@ import { QueueModule } from './infrastructure/queues/queue.module';
 import { EngineModule } from './engine/engine.module';
 import { WorkersModule } from './workers/workers.module';
 import { HealthModule } from './infrastructure/health/health.module';
+import { SharedLibraryModule } from './modules/shared-library/shared-library.module';
 import { TenantContextMiddleware } from './common/middleware/tenant-context.middleware';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 
@@ -57,6 +58,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     ExecutionModule,
     TaskModule,
     SlaModule,
+    SharedLibraryModule,
 
     // Real-time
     WebsocketModule,

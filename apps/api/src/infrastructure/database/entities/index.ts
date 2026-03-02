@@ -15,3 +15,5 @@ export { WorkflowInstanceEntity } from './workflow-instance.entity';
 export { TaskInstanceEntity } from './task-instance.entity';
 export { ExecutionTokenEntity } from './execution-token.entity';
 export { TaskStateHistoryEntity } from './task-state-history.entity';
+export { SharedWorkflowEntity } from './shared-workflow.entity';
+export { SharedWorkflowImportEntity } from './shared-workflow-import.entity';

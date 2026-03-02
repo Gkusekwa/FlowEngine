@@ -35,6 +35,7 @@ import { AuditService } from '../audit/audit.service';
 const BCRYPT_ROUNDS = 12;
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+const MIN_PASSWORD_LENGTH = 8;
 
 @Injectable()
 export class AuthService {
@@ -210,6 +211,14 @@ export class AuthService {
     ipAddress?: string,
     userAgent?: string,
   ): Promise<LoginResponse> {
+    // Validate password strength
+    if (!password || password.length < MIN_PASSWORD_LENGTH) {
+      throw new BadRequestException({
+        code: ErrorCodes.AUTH_INVALID_CREDENTIALS,
+        message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long`,
+      });
+    }
+
     // Check if slug is taken
     const existingTenant = await this.tenantRepo.findOne({ where: { slug: tenantSlug } });
     if (existingTenant) {
@@ -326,6 +335,14 @@ export class AuthService {
     name: string,
     inviteCode: string,
   ): Promise<{ message: string; tenantName: string }> {
+    // Validate password strength
+    if (!password || password.length < MIN_PASSWORD_LENGTH) {
+      throw new BadRequestException({
+        code: ErrorCodes.AUTH_INVALID_CREDENTIALS,
+        message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long`,
+      });
+    }
+
     // Validate invite code
     const code = await this.inviteCodeRepo.findOne({
       where: { code: inviteCode, isActive: true },

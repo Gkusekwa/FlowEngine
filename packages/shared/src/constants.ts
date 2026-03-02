@@ -20,6 +20,9 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
     'audit:read',
     'groups:manage',
     'settings:manage',
+    'library:share',
+    'library:import',
+    'library:browse',
   ],
   admin: [
     'members:manage',
@@ -40,6 +43,9 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
     'audit:read',
     'groups:manage',
     'settings:manage',
+    'library:share',
+    'library:import',
+    'library:browse',
   ],
   designer: [
     'workflows:create',
@@ -50,6 +56,9 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
     'instances:read',
     'tasks:read',
     'sla:read',
+    'library:share',
+    'library:import',
+    'library:browse',
   ],
   operator: [
     'workflows:read',
@@ -62,8 +71,10 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
     'tasks:assign',
     'tasks:delegate',
     'sla:read',
+    'library:import',
+    'library:browse',
   ],
-  viewer: ['workflows:read', 'instances:read', 'tasks:read', 'sla:read'],
+  viewer: ['workflows:read', 'instances:read', 'tasks:read', 'sla:read', 'library:browse'],
 };
 
 // JWT defaults

@@ -545,6 +545,22 @@ export class WorkflowService {
     if (!slaDefinitions?.length) return;
 
     for (const slaDef of slaDefinitions) {
+      if (slaDef.breachThresholdSeconds <= 0) {
+        throw new BadRequestException({
+          code: 'WF_INVALID_SLA',
+          message: `SLA breach threshold must be greater than 0 for element "${slaDef.bpmnElementId}"`,
+        });
+      }
+      if (
+        slaDef.warningThresholdSeconds != null &&
+        slaDef.warningThresholdSeconds >= slaDef.breachThresholdSeconds
+      ) {
+        throw new BadRequestException({
+          code: 'WF_INVALID_SLA',
+          message: `SLA warning threshold must be less than breach threshold for element "${slaDef.bpmnElementId}"`,
+        });
+      }
+
       const activity = activityMap.get(slaDef.bpmnElementId);
       if (activity) {
         await this.slaRepo.save(

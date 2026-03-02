@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import type { SlaDefinitionInput } from '@flowengine/shared';
 import { PropertiesPanel } from '../components/workflow-editor/PropertiesPanel';
+import { ShareToLibraryModal } from '../components/shared-library/ShareToLibraryModal';
 
 interface WorkflowDetail {
   id: string;
@@ -40,6 +41,9 @@ export function WorkflowEditorPage() {
   const [publishing, setPublishing] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [error, setError] = useState('');
+
+  // Share to library modal state
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Import XML modal state
   const [showImportModal, setShowImportModal] = useState(false);
@@ -548,12 +552,20 @@ export function WorkflowEditorPage() {
                 New Version
               </button>
               {workflow.status === 'published' && (
-                <button
-                  onClick={handleDeactivate}
-                  className="rounded-lg border border-orange-300 px-3 py-1.5 text-sm font-medium text-orange-600 hover:bg-orange-50"
-                >
-                  Deactivate
-                </button>
+                <>
+                  <button
+                    onClick={() => setShowShareModal(true)}
+                    className="rounded-lg border border-primary-300 px-3 py-1.5 text-sm font-medium text-primary-600 hover:bg-primary-50"
+                  >
+                    Share to Library
+                  </button>
+                  <button
+                    onClick={handleDeactivate}
+                    className="rounded-lg border border-orange-300 px-3 py-1.5 text-sm font-medium text-orange-600 hover:bg-orange-50"
+                  >
+                    Deactivate
+                  </button>
+                </>
               )}
               {workflow.status !== 'published' && (
                 <button
@@ -629,6 +641,16 @@ export function WorkflowEditorPage() {
           result={validationResult}
           onClose={() => setShowValidation(false)}
           onIssueClick={handleIssueClick}
+        />
+      )}
+
+      {/* Share to Library Modal */}
+      {showShareModal && workflow && (
+        <ShareToLibraryModal
+          workflowDefinitionId={workflow.id}
+          workflowName={workflow.name}
+          onClose={() => setShowShareModal(false)}
+          onShared={() => setShowShareModal(false)}
         />
       )}
 

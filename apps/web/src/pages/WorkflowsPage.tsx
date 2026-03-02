@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
+import { ShareToLibraryModal } from '../components/shared-library/ShareToLibraryModal';
 
 interface WorkflowSummary {
   id: string;
@@ -40,6 +41,7 @@ export function WorkflowsPage() {
   const [newDescription, setNewDescription] = useState('');
   const [creating, setCreating] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [shareWorkflow, setShareWorkflow] = useState<{ id: string; name: string } | null>(null);
 
   const fetchWorkflows = async () => {
     setLoading(true);
@@ -241,14 +243,23 @@ export function WorkflowsPage() {
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       {wf.status === 'published' && (
-                        <button
-                          onClick={(e) => handleDeactivate(e, wf.id)}
-                          disabled={actionLoading === wf.id}
-                          className="rounded px-2 py-1 text-xs font-medium text-orange-600 hover:bg-orange-50 disabled:opacity-50"
-                          title="Deactivate workflow"
-                        >
-                          Deactivate
-                        </button>
+                        <>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setShareWorkflow({ id: wf.id, name: wf.name }); }}
+                            className="rounded px-2 py-1 text-xs font-medium text-primary-600 hover:bg-primary-50"
+                            title="Share to library"
+                          >
+                            Share
+                          </button>
+                          <button
+                            onClick={(e) => handleDeactivate(e, wf.id)}
+                            disabled={actionLoading === wf.id}
+                            className="rounded px-2 py-1 text-xs font-medium text-orange-600 hover:bg-orange-50 disabled:opacity-50"
+                            title="Deactivate workflow"
+                          >
+                            Deactivate
+                          </button>
+                        </>
                       )}
                       {wf.status !== 'published' && (
                         <button
@@ -291,6 +302,16 @@ export function WorkflowsPage() {
             Next
           </button>
         </div>
+      )}
+
+      {/* Share modal */}
+      {shareWorkflow && (
+        <ShareToLibraryModal
+          workflowDefinitionId={shareWorkflow.id}
+          workflowName={shareWorkflow.name}
+          onClose={() => setShareWorkflow(null)}
+          onShared={() => setShareWorkflow(null)}
+        />
       )}
 
       {/* Create modal */}
